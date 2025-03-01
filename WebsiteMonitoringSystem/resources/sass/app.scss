@@ -1,8 +1,7 @@
-// Fonts
-@import url('https://fonts.bunny.net/css?family=Nunito');
+@use 'variables';
+@use 'bootstrap/scss/bootstrap';
 
-// Variables
-@import 'variables';
-
-// Bootstrap
-@import 'bootstrap/scss/bootstrap';
+/* Add styles below this line */
+body {
+    font-family: Arial, sans-serif;
+}

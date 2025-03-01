@@ -14,6 +14,8 @@ use Illuminate\Http\Middleware\SetCacheHeaders;
 use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Routing\Middleware\ValidateSignature;
 use App\Http\Middleware\AdminMiddleware; // Custom middleware
+\Illuminate\Http\Middleware\HandleCors::class;
+
 
 class Kernel extends HttpKernel
 {
@@ -27,8 +29,11 @@ class Kernel extends HttpKernel
         'signed' => ValidateSignature::class,
         'throttle' => ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        \App\Http\Middleware\VerifyCsrfToken::class,
+
 
         // Custom Middleware
         'admin' => AdminMiddleware::class,
+
     ];
 }

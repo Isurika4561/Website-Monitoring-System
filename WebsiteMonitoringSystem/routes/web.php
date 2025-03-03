@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
 
 
 
@@ -14,8 +17,8 @@ Auth::routes();
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
-use App\Http\Controllers\AdminController;
+
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
+Route::get('/admin', [AdminController::class, 'index'])->name('admin.dashboard');
 });

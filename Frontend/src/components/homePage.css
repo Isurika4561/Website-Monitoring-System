@@ -1,0 +1,150 @@
+/* src/styles/homePage.css */
+
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f7fb;
+    color: #333;
+  }
+  
+  .home-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+  }
+  
+  .home-header {
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    padding: 50px;
+    width: 100%;
+  }
+  
+  .home-header h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+  }
+  
+  .home-header p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+  }
+  
+  .home-content {
+    width: 80%;
+    max-width: 1200px;
+    margin-top: 50px;
+    padding: 0 20px;
+    text-align: center;
+  }
+  
+  .cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .cta-button {
+    padding: 15px 30px;
+    background-color: #007bff;
+    color: white;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .cta-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .website-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  
+  .website-item {
+    background-color: #ffffff;
+    padding: 20px;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+  }
+  
+  .website-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .website-item p {
+    font-size: 1rem;
+    margin: 5px 0;
+  }
+  
+  .status {
+    font-weight: bold;
+  }
+  
+  .status.up {
+    color: green;
+  }
+  
+  .status.down {
+    color: red;
+  }
+  
+  .home-footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    margin-top: auto;
+  }
+  
+  .home-footer p {
+    margin: 0;
+    font-size: 1rem;
+  }
+  
+
+/* Additional styles for Add Website Page */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  form input,
+  form select,
+  form button {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  form button:hover {
+    background-color: #0056b3;
+  }
+  

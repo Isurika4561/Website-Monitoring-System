@@ -13,27 +13,15 @@ import DashboardPage from './components/DashboardPage';
 
 const App = () => {
   return (
-    <Router> {/* Wrap everything inside Router */}
-      
-        <Routes> 
-          <Route path="/" element={<HomePage />} />
-          <Route path="/add-website" element={<AddWebsitePage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/settings" element={<SettingsPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          
-        </Routes>
-  
+    <Router>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/settings" element={<SettingsPage />} />
+      </Routes>
     </Router>
-
-
-      
-      
-      
-
-
   );
 };
 

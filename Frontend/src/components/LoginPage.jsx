@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import './LoginPage.css'; 
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import axiosInstance from '../services/api';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -20,17 +20,15 @@ const LoginPage = () => {
 
     // Axios POST request to backend (Laravel)
     try {
-      const response = await axios.post('http://127.0.0.1:8000/login', {
+      await axiosInstance.get("/sanctum/csrf-cookie");
+      const response = await axiosInstance.post('/api/login', {
         email,
         password,
       });
 
-      if (response.data.success) {
-        alert('Login successful!');
-        navigate('/dashboard'); 
-      } else {
-        setError('Invalid email or password.');
-      }
+      alert('Login successful!');
+        navigate('/dashboard');
+
     } catch (err) {
       setError('Login failed. Please try again later.');
     }

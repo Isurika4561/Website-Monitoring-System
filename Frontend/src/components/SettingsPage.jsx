@@ -60,6 +60,7 @@ const SettingsPage = () => {
 
   return (
     <div className="settings-container">
+      
       <h2>Manage Settings</h2>
 
       <form onSubmit={handleSubmit}>

@@ -35,36 +35,24 @@ class AuthController extends Controller
 
     }
     public function register(Request $request)
-    {
-        // Validate the incoming request
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|confirmed|min:8',
-        ]);
-        
+{
+    $request->validate([
+        'name' => 'required|string|max:255', 
+        'email' => 'required|email|unique:users,email', 
+        'password' => 'required|confirmed|min:8', 
+    ]);
 
-        // Create a new user
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-        
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password), 
+    ]);
 
-        // Create a Sanctum token for the newly registered user
-        $token = $user->createToken('auth-token')->plainTextToken;
-
-        // Log the registration
-        Log::info('User registered successfully', ['user_id' => $user->id, 'email' => $user->email]);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Registration successful',
-            'user' => $user,
-            'token' => $token, // Return the Sanctum token
-        ]);
-    }
+    return response()->json([
+        'message' => 'Registration successful',
+        'user' => $user,
+    ], 201);
+}
 
     public function logout(Request $request)
     {

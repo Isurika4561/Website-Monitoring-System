@@ -1,25 +1,30 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React from "react";
 import "../components/homePage.css";
 import { useNavigate } from "react-router-dom";
 
-const HomePage = () => {
+const NewHome = () => {
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/logout"); // Navigate to the logout page
+  };
 
   return (
     <div className="home-container">
-      
       {/* Hero Section */}
       <section className="hero-section">
         <div className="hero-content">
-          <h1>Monitor Your Websites in Real-Time. Stay Ahead of Downtime.</h1>
+          <h1>Welcome Back! Monitor Your Websites in Real-Time.</h1>
           <p>Ensure optimal performance, uptime, and security for all your websites and applications.</p>
           <div className="hero-buttons">
-            <button onClick={() => navigate("/register")} className="btn-primary">
-              Register
+            <button onClick={() => navigate("/add-website")} className="btn-primary">
+              Add Website to monitor
             </button>
-            <button onClick={() => navigate("/login")} className="btn-secondary">
-              Login
+            <button onClick={() => navigate("/settings")} className="btn-secondary">
+              Settings
+            </button>
+            <button onClick={handleLogout} className="btn-logout">
+              Logout
             </button>
           </div>
         </div>
@@ -55,4 +60,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default NewHome; // Updated export name

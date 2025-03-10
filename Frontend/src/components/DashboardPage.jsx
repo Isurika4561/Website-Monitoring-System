@@ -75,6 +75,7 @@ const DashboardPage = () => {
 
   return (
     <div className="dashboard-container">
+      
       <h2>Website Monitoring Panel</h2>
 
       <div className="live-status">
@@ -98,7 +99,7 @@ const DashboardPage = () => {
         <h3>Uptime Statistics</h3>
         <Line data={uptimeData} />
       </div>
-
+<br />
       <div className="error-logs">
         <h3>Error Logs</h3>
         <ul>
@@ -107,6 +108,7 @@ const DashboardPage = () => {
           ))}
         </ul>
       </div>
+  
       <Link to="/settings">Go to Settings</Link>
     </div>
   );

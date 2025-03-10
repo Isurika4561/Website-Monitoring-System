@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './RegisterPage.css'; 
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
+import axiosInstance from '../services/api';
 
 const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -24,31 +25,51 @@ const RegisterPage = () => {
       setError('Passwords do not match.');
       return;
     }
+    const formData = {
+      name: name,
+      email: email,
+      password: password,
+      password_confirmation: confirmPassword, // Ensure this is passed correctly
+    };
 
     // Axios POST request to backend (Laravel)
     try {
-      const response = await axios.post('http://127.0.0.1:8000/register', {
-        name,
-        email,
-        password,
-        password_confirmation: confirmPassword, // Send the password_confirmation field
+      
+      await axiosInstance.get("/sanctum/csrf-cookie");
+      const response = await axiosInstance.post('/api/register', formData, {  // Send the formData here
+        headers: {
+          "Content-Type": "application/json",
+        },
       });
+      
 
-      // Handle successful registration
+      //Handle successful registration
       setSuccessMessage(response.data.message); // Set the success message
+      setSuccess(true); // Mark success as true for success message
+      setName('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      
+    
     } catch (err) {
+      // Log the error to understand the structure of the response
+      console.error("Error:", err.response);
       if (err.response && err.response.data.errors) {
+        // Show specific validation errors
         setError('Registration failed. Please try again.');
+      } else {
+        setError('An unexpected error occurred. Please try again.');
       }
     }
   };
-  
+
   return (
     <div className="register-container">
       <div className="register-form">
         <h2>Register</h2>
         {error && <p className="error-message">{error}</p>}
-        {success && <p className="success-message">Registration successful! Please log in.</p>}
+        {success && <p className="success-message">{successMessage}</p>}
         <form onSubmit={handleRegister}>
           {/* Name Input */}
           <div className="input-group">
@@ -108,8 +129,8 @@ const RegisterPage = () => {
           </button>
         </form>
         <p>
-        Already have an account? <Link to="/login">Login here</Link>
-      </p>
+          Already have an account? <Link to="/login">Login here</Link>
+        </p>
       </div>
     </div>
   );

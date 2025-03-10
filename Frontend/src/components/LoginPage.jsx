@@ -26,8 +26,11 @@ const LoginPage = () => {
         password,
       });
 
+      localStorage.setItem('bearer_token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+      
       alert('Login successful!');
-        navigate('/dashboard');
+        navigate('/home');
 
     } catch (err) {
       setError('Login failed. Please try again later.');

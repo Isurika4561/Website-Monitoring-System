@@ -1,77 +1,54 @@
-// src/components/AddWebsitePage.jsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../components/homePage.css'; // You can use the same styling
+import '../components/addWebsite.css';
+import { useNavigate, Link } from 'react-router-dom';
 
 const AddWebsitePage = () => {
   const [name, setName] = useState('');
   const [url, setUrl] = useState('');
-  const [status, setStatus] = useState('inactive');
+  const navigate = useNavigate();
 
-  const handleAddWebsite = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const newWebsite = {
-      name,
-      url,
-      status,
-    };
-
-    axios
-      .post('http://127.0.0.1:8000/websites', newWebsite)
-      .then((response) => {
-        console.log('Website added:', response.data);
-        // Redirect or show success message
-      })
-      .catch((error) => {
-        console.error('Error adding website:', error);
-      });
+    // Add your submission logic here
+    navigate('/website-list');
   };
 
   return (
-    <div className="home-container">
-      <header className="home-header">
-        <h1>Add a New Website</h1>
-        <p>Enter the details of the website you want to monitor</p>
-      </header>
-
-      <section className="home-content">
-        <form onSubmit={handleAddWebsite}>
-          <div>
-            <label>Website Name:</label>
+    
+    <div className="form-container">
+      
+      <main className="form-main">
+        <h1>Add New Website</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Website Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
+              placeholder="Enter website name"
             />
           </div>
-          <div>
-            <label>Website URL:</label>
+          <div className="form-group">
+            <label>Website URL</label>
             <input
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               required
+              placeholder="https://example.com"
             />
           </div>
-          <div>
-            <label>Status:</label>
-            <select
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
-            >
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
-          </div>
-          <button type="submit">Add Website</button>
+          <button type="submit" className="btn-primary">
+            Add Website
+          </button>
         </form>
-      </section>
-
-      <footer className="home-footer">
-        <p>&copy; 2025 Website Monitoring System. All Rights Reserved.</p>
-      </footer>
+        <div className="form-footer">
+          <Link to="/website-list">View Website List →</Link>
+        </div>
+      </main>
     </div>
   );
 };

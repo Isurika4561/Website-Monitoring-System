@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\MonitoringLogsController;
 use App\Http\Controllers\WebsiteController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -24,5 +25,9 @@ Route::get('/sanctum/csrf-cookie', function () {
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/websites', [WebsiteController::class, 'store']);
     Route::get('/websites', [WebsiteController::class, 'index']);
+    Route::get('/monitoring-logs', [MonitoringLogsController::class, 'index']);
+    Route::get('/monitoring-logs-data/{website_id}', [MonitoringLogsController::class, 'show']);
+
+
 });
 

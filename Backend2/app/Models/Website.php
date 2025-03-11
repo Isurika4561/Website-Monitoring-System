@@ -19,4 +19,9 @@ class Website extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+
+    /*public function monitoringLogs(){
+        return $this->hasMany(MonitoringLog::class);
+    }
+        */
 }

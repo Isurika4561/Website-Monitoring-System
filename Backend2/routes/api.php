@@ -21,6 +21,7 @@ Route::get('/sanctum/csrf-cookie', function () {
     return response()->noContent();
 });
 
+Route::middleware('api')->post('/login', [AuthController::class, 'login']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/websites', [WebsiteController::class, 'store']);

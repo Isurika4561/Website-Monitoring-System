@@ -48,43 +48,47 @@ const AddWebsite = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow p-6">
-      <h2 className="text-xl font-bold mb-4text-3xl font-bold text-gray-900">Add New Website</h2>
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      {success && <p className="text-green-500 mb-4">{success}</p>}
-      
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label className="text-3xl font-bold text-black">Website Name</label>
-          <input
-            type="name"
-            className="w-full p-2 border border-black rounded placeholder-gray-500 text-black"
-            placeholder="Enter Website Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
-        <div className="mb-4">
-          <label className="text-3xl font-bold text-black">Website URL</label>
-          <input
-            type="url"
-            className="w-full p-2 border border-black rounded placeholder-gray-500 text-black"
-            placeholder="https://example.com"
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            required
-          />
-        </div>
+    <div className="h-screen w-screen flex justify-center items-center bg-gray-100">
+      <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-lg">
+        <h2 className="text-3xl font-bold text-gray-900 mb-6 text-center">Add New Website</h2>
         
-        <button
-          type="submit"
-          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 disabled:bg-gray-400"
-          disabled={loading}
-        >
-          {loading ? 'Adding...' : 'Add Website'}
-        </button>
-      </form>
+        {error && <p className="text-red-500 mb-4 text-center">{error}</p>}
+        {success && <p className="text-green-500 mb-4 text-center">{success}</p>}
+
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-lg font-semibold text-gray-700">Website Name</label>
+            <input
+              type="text"
+              className="w-full p-3 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter Website Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-lg font-semibold text-gray-700">Website URL</label>
+            <input
+              type="url"
+              className="w-full p-3 border border-gray-300 rounded-lg placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="https://example.com"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white p-3 rounded-lg hover:bg-blue-600 disabled:bg-gray-400 transition duration-200"
+            disabled={loading}
+          >
+            {loading ? 'Adding...' : 'Add Website'}
+          </button>
+        </form>
+      </div>
     </div>
   );
 };

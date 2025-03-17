@@ -42,5 +42,16 @@ class WebsiteController extends Controller
     ], 201);
 }
 
+public function getWebsiteStats()
+    {
+        $monitored = Website::count();
+        $active = Website::where('status', 'up')->count();
+        $down = Website::where('status', 'down')->count();
 
+        return response()->json([
+            'monitored' => $monitored,
+            'active' => $active,
+            'down' => $down,
+        ]);
+    }
 }

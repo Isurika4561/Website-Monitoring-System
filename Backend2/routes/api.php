@@ -38,7 +38,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/websites', [WebsiteController::class, 'index']);
     Route::get('/monitoring-logs', [MonitoringLogsController::class, 'index']);
     Route::get('/monitoring-logs-data/{website_id}', [MonitoringLogsController::class, 'show']);
-
+    Route::get('/website-stats', [WebsiteController::class, 'getWebsiteStats']);
 
 });
 

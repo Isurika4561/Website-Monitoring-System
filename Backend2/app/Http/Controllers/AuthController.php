@@ -24,7 +24,7 @@ class AuthController extends Controller
                 'name' => $request->name,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                //'role_id' => $roleId
+                'role_id' => $roleId
             ]
         );
 
@@ -45,7 +45,6 @@ class AuthController extends Controller
         'password' => 'required',
     ]);
 
-    // Attempt login with credentials
     if (Auth::attempt($credentials)) {
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
@@ -53,14 +52,14 @@ class AuthController extends Controller
         return response()->json([
             'user' => $user,
             'token' => $token
-        ], 200);
+        ]);
     }
 
-    // Generic error message to avoid leaking info
     return response()->json([
-        'message' => 'Invalid email or password'
+        'message' => 'Invalid credentials'
     ], 401);
 }
+
 
     public function logout(Request $request)
     {

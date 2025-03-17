@@ -7,6 +7,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
+// Handle CORS preflight (OPTIONS) requests
+Route::options('/{any}', function () {
+    return response('', 200)
+        ->header('Access-Control-Allow-Origin', 'http://localhost:5173') // Allow your frontend URL
+        ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+        ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+})->where('any', '.*');
+
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
@@ -20,6 +28,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::get('/sanctum/csrf-cookie', function () {
     return response()->noContent();
 });
+
+
 
 Route::middleware('api')->post('/login', [AuthController::class, 'login']);
 

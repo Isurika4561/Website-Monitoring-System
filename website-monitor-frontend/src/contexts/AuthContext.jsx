@@ -4,23 +4,28 @@ import instance from '../api/axios';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem('user');
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('bearer_token');
-  
+    const storedUser = localStorage.getItem('user');
+
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
-      instance.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`; // Ensure auth header persists
-      console.log("Authorization Header Set:", storedToken);
+      instance.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
+      console.log("Authorization Header Restored:", storedToken);
+    } else {
+      instance.defaults.headers.common['Authorization'] = '';
     }
   }, []);
 
   const login = (userData, token) => {
     localStorage.setItem('bearer_token', token);
     localStorage.setItem('user', JSON.stringify(userData));
-    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Set auth header globally
+    instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setUser(userData);
   };
 

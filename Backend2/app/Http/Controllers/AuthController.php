@@ -10,55 +10,49 @@ use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
     public function register(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed'
-        ]);
-
-        $roleId = $request->role_id ?? 2; // Default role_id = 2 for "User"
-
-        $user = User::create(
-            [
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role_id' => $roleId
-            ]
-        );
-
-        // Create a token for the newly registered user
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'user' => $user,
-            'token' => $token // Return token
-        ]);
-    }
-
-
-    public function login(Request $request)
 {
-    $credentials = $request->validate([
+    $validatedData = $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    $user = User::create([
+        'name' => $validatedData['name'],
+        'email' => $validatedData['email'],
+        'password' => bcrypt($validatedData['password']),
+    ]);
+
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'message' => 'Registration successful',
+        'user' => $user,
+        'token' => $token
+    ], 201);
+}
+
+public function login(Request $request)
+{
+    $request->validate([
         'email' => 'required|email',
         'password' => 'required',
     ]);
 
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'user' => $user,
-            'token' => $token
-        ]);
+    if (!Auth::attempt($request->only('email', 'password'))) {
+        return response()->json(['message' => 'Invalid login credentials'], 401);
     }
 
+    $user = Auth::user();
+    $token = $user->createToken('auth_token')->plainTextToken;
+
     return response()->json([
-        'message' => 'Invalid credentials'
-    ], 401);
+        'message' => 'Login successful',
+        'user' => $user,
+        'token' => $token
+    ], 200);
 }
+
 
 
     public function logout(Request $request)

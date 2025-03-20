@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from '../api/axios';
 import instance from '../api/axios';
 
 const WebsiteList = () => {
@@ -10,17 +9,13 @@ const WebsiteList = () => {
       try {
         await instance.get("/sanctum/csrf-cookie");
         const response = await instance.get('/api/websites');
-
-        // Check response format and extract data correctly
         const websiteData = Array.isArray(response.data) ? response.data : response.data.websites;
-
-        //setWebsites(response.data);
-        setWebsites(websiteData || []); // Ensure it's always an array
+        setWebsites(websiteData || []);
       } catch (err) {
         console.error("Error fetching websites:", err);
-        setWebsites([]); // Prevent map() from breaking if the request fails
       }
     };
+
     fetchWebsites();
   }, []);
 

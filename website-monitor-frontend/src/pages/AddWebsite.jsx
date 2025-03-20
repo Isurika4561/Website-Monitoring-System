@@ -5,34 +5,34 @@ import instance from '../api/axios';
 
 const AddWebsite = () => {
   const [url, setUrl] = useState('');
+  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const { user } = useAuth();
-  const [name, setName] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setSuccess('');
-    setName('');
-  
-    const token = localStorage.getItem('bearer_token'); // Retrieve token from localStorage
-  
+
+    const token = localStorage.getItem('bearer_token');
+
     if (!token) {
       setError('Authentication failed. Please log in again.');
       setLoading(false);
       return;
     }
-  
+
     try {
       await instance.get("/sanctum/csrf-cookie");
-      const response = await instance.post('/api/websites', 
-        { name, url, user_id: user.id }, 
+      const response = await instance.post(
+        '/api/websites',
+        { name, url, user_id: user.id },
         {
           headers: {
-            'Authorization': `Bearer ${token}`, // Attach token
+            'Authorization': `Bearer ${token}`,
             'Accept': 'application/json'
           }
         }
@@ -40,6 +40,7 @@ const AddWebsite = () => {
       console.log("Website Add Response:", response.data);
       setSuccess('Website added successfully');
       setUrl('');
+      setName('');
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to add website');
     } finally {

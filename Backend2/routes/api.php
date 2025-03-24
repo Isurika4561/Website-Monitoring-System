@@ -63,6 +63,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // ✅ Both Admin and User can add websites
     Route::post('/websites', [WebsiteController::class, 'store']);
 
+    // ✅ Both Admin and User can delete websites
+    Route::delete('/websites/{id}', [WebsiteController::class, 'destroy']);
+
     // ✅ Logout
     Route::post('/logout', [AuthController::class, 'logout']);
 
@@ -70,6 +73,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/admin/users', [AuthController::class, 'listUsers']);
     Route::delete('/admin/users/{id}', [AuthController::class, 'deleteUser']);
     Route::put('/admin/users/{id}', [AuthController::class, 'updateUser']);
-
+   
     
 });

@@ -7,24 +7,33 @@ const WebsiteList = () => {
   const { user, isAdmin } = useAuth();
 
   useEffect(() => {
-    const fetchWebsites = async () => {
-      try {
-        await instance.get("/sanctum/csrf-cookie");
-        // ✅ Admin gets all websites, user gets their own
-        const endpoint = isAdmin ? '/api/websites' : `/api/user/${user.id}/websites`;
-        const response = await instance.get(endpoint);
-
-        const websiteData = Array.isArray(response.data) ? response.data : response.data.websites;
-        setWebsites(websiteData || []);
-      } catch (err) {
-        console.error("Error fetching websites:", err);
-      }
-    };
-
-    if (user) {
-      fetchWebsites();
-    }
+    fetchWebsites();
   }, [isAdmin, user]);
+
+  const fetchWebsites = async () => {
+    try {
+      await instance.get("/sanctum/csrf-cookie");
+      const endpoint = isAdmin ? '/api/websites' : `/api/user/${user.id}/websites`;
+      const response = await instance.get(endpoint);
+      const websiteData = Array.isArray(response.data) ? response.data : response.data.websites;
+      setWebsites(websiteData || []);
+    } catch (err) {
+      console.error("Error fetching websites:", err);
+    }
+  };
+
+  const handleDelete = async (websiteId) => {
+    if (!window.confirm('Are you sure you want to delete this website?')) return;
+    try {
+      const token = localStorage.getItem('bearer_token');
+      await instance.delete(`/api/websites/${websiteId}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      fetchWebsites(); // Refresh list after deletion
+    } catch (err) {
+      console.error("Failed to delete website:", err);
+    }
+  };
 
   return (
     <div className="h-screen w-screen flex flex-col bg-gray-100">
@@ -48,7 +57,12 @@ const WebsiteList = () => {
                   <p>Status:
                     <span className={website.status === "up" ? "text-green-600" : "text-red-600"}> {website.status}</span>
                   </p>
-                  <p>Last checked: {website.last_checked ? new Date(website.last_checked).toLocaleString() : 'N/A'}</p>
+                  <button
+                    onClick={() => handleDelete(website.id)}
+                    className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
                 </div>
               ))
             )}

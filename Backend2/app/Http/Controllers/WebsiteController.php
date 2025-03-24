@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class WebsiteController extends Controller
 {
-    // ✅ Admin - Get all websites
+    // Admin - Get all websites
     public function index(Request $request)
     {
         $user = $request->user();
@@ -18,7 +18,7 @@ class WebsiteController extends Controller
         return response()->json(['message' => 'Forbidden'], 403);
     }
 
-    // ✅ Get websites created by a specific user
+    // Get websites created by a specific user
     public function userWebsites(Request $request, $userId)
     {
         $authUser = $request->user();
@@ -30,7 +30,7 @@ class WebsiteController extends Controller
         return response()->json($websites, 200);
     }
 
-    // ✅ Both Admin and User can add websites
+    // Both Admin and User can add websites
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -53,4 +53,19 @@ class WebsiteController extends Controller
 
         return response()->json($website, 201);
     }
+
+     // Both Admin and User can delete websites
+    public function destroy($id)
+    {
+        $website = Website::findOrFail($id);
+
+        // Optional: Check ownership if required
+        if (auth()->user()->role !== 'admin' && auth()->user()->id !== $website->user_id) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $website->delete();
+        return response()->json(['message' => 'Website deleted successfully']);
+    }
+
 }

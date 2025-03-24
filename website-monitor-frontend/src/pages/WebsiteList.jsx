@@ -1,14 +1,19 @@
 import { useState, useEffect } from 'react';
 import instance from '../api/axios';
+import { useAuth } from '../contexts/AuthContext';
 
 const WebsiteList = () => {
   const [websites, setWebsites] = useState([]);
+  const { user, isAdmin } = useAuth();
 
   useEffect(() => {
     const fetchWebsites = async () => {
       try {
         await instance.get("/sanctum/csrf-cookie");
-        const response = await instance.get('/api/websites');
+        // ✅ Admin gets all websites, user gets their own
+        const endpoint = isAdmin ? '/api/websites' : `/api/user/${user.id}/websites`;
+        const response = await instance.get(endpoint);
+
         const websiteData = Array.isArray(response.data) ? response.data : response.data.websites;
         setWebsites(websiteData || []);
       } catch (err) {
@@ -16,8 +21,10 @@ const WebsiteList = () => {
       }
     };
 
-    fetchWebsites();
-  }, []);
+    if (user) {
+      fetchWebsites();
+    }
+  }, [isAdmin, user]);
 
   return (
     <div className="h-screen w-screen flex flex-col bg-gray-100">
@@ -38,7 +45,7 @@ const WebsiteList = () => {
                       {website.url}
                     </a>
                   </h3>
-                  <p>Status: 
+                  <p>Status:
                     <span className={website.status === "up" ? "text-green-600" : "text-red-600"}> {website.status}</span>
                   </p>
                   <p>Last checked: {website.last_checked ? new Date(website.last_checked).toLocaleString() : 'N/A'}</p>

@@ -1,7 +1,7 @@
 import { useAuth } from '../contexts/AuthContext';
 import { Link, Navigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from '../api/axios';
+import instance from '../api/axios';
 
 const Home = () => {
   const { user } = useAuth();
@@ -10,7 +10,8 @@ const Home = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get('/api/website-stats'); // Fetch stats from backend
+        await instance.get('/sanctum/csrf-cookie');
+        const response = await instance.get('/api/website-stats'); // Fetch stats from backend
         setStats(response.data);
       } catch (error) {
         console.error('Error fetching website stats:', error);
@@ -25,7 +26,7 @@ const Home = () => {
   }
 
   return (
-    <div className="h-screen w-screen flex flex-col justify-center items-center bg-gray-100 p-6">
+    <div className="h-screen w-screen flex flex-col justify-center items-center bg-gray-100 p-6 overflow-x-hidden">
       <h1 className="text-3xl font-bold text-blue-500">
         Welcome {user ? user.name : 'Guest'}
       </h1>
@@ -51,14 +52,18 @@ const Home = () => {
         <div className="bg-white p-6 rounded-lg shadow w-full">
           <h2 className="text-3xl font-bold text-blue-500 mb-4">Quick Actions</h2>
           <div className="space-y-2">
+
+            {/* ✅ Add Website - Visible to ALL (Regular and Admin) */}
             <Link to="/add-website">
               <button className="w-full p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
                 Add New Website
               </button>
             </Link>
+
+            {/* ✅ View Websites - Visible to ALL */}
             <Link to="/websites">
               <button className="w-full p-2 bg-gray-200 rounded hover:bg-gray-300">
-                View All Websites
+                View My Websites
               </button>
             </Link>
           </div>

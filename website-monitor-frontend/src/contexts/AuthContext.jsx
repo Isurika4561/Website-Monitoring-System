@@ -9,12 +9,16 @@ export const AuthProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
+  // Role check - true if user role is 'admin'
+  const isAdmin = user?.role === 'admin';
+
   useEffect(() => {
     const storedToken = localStorage.getItem('bearer_token');
     const storedUser = localStorage.getItem('user');
 
     if (storedUser && storedToken) {
-      setUser(JSON.parse(storedUser));
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
       instance.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
       console.log("Authorization Header Restored:", storedToken);
     } else {
@@ -24,7 +28,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = (userData, token) => {
     localStorage.setItem('bearer_token', token);
-    localStorage.setItem('user', JSON.stringify(userData));
+    localStorage.setItem('user', JSON.stringify(userData)); // Ensure 'role' comes in userData
     instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     setUser(userData);
   };
@@ -37,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, isAdmin }}>
       {children}
     </AuthContext.Provider>
   );

@@ -30,7 +30,8 @@ const Register = () => {
         name,
         email,
         password,
-        password_confirmation: confirmPassword
+        password_confirmation: confirmPassword,
+        role: "user"
       }, {
         headers: {
           'Content-Type': 'application/json',

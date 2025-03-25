@@ -2,52 +2,50 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    // Register
     public function register(Request $request)
     {
-        $request->validate([
-            'name' => 'required|max:255',
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed'
+            'password' => 'required|string|min:6',
+            'role' => 'required|in:user,admin'
         ]);
 
-        $roleId = $request->role_id ?? 2; // Default role_id = 2 for "User"
-
-        $user = User::create(
-            [
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-                'role_id' => $roleId
-            ]
-        );
-
-        // Create a token for the newly registered user
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'user' => $user,
-            'token' => $token // Return token
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
         ]);
+
+        return response()->json($user, 201);
     }
 
-
+    // Login
     public function login(Request $request)
-{
-    $credentials = $request->validate([
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
+    {
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-    if (Auth::attempt($credentials)) {
-        $user = Auth::user();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $user = User::where('email', $validated['email'])->first();
+
+        if (!$user || !Hash::check($validated['password'], $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+
+        $token = $user->createToken('api-token')->plainTextToken;
 
         return response()->json([
             'user' => $user,
@@ -55,19 +53,47 @@ class AuthController extends Controller
         ]);
     }
 
-    return response()->json([
-        'message' => 'Invalid credentials'
-    ], 401);
-}
-
-
+    // Logout
     public function logout(Request $request)
     {
-        // Revoke all user tokens
         $request->user()->tokens()->delete();
-
-        return response()->json([
-            'message' => 'You have been logged out successfully.'
-        ]);
+        return response()->json(['message' => 'Logged out'], 200);
     }
+
+    // Admin - List all users
+    public function listUsers(Request $request)
+    {
+        if ($request->user()->role !== 'admin') {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $users = User::select('id', 'name', 'email', 'role')->get();
+        return response()->json($users);
+    }
+
+    //Delate User
+
+    public function deleteUser($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+        return response()->json(['message' => 'User deleted']);
+    }
+
+    //Update User
+    public function updateUser(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'role' => 'required|in:user,admin',
+        ]);
+
+        $user = User::findOrFail($id);
+        $user->name = $validated['name'];
+        $user->role = $validated['role'];
+        $user->save();
+
+        return response()->json(['message' => 'User updated']);
+    }
+
 }

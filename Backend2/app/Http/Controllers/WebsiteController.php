@@ -2,44 +2,79 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Website;
 use Illuminate\Http\Request;
+use App\Models\Website;
+use Illuminate\Support\Facades\Auth;
 
 class WebsiteController extends Controller
 {
-
-    public function index()
+    // Admin - Get all websites
+    public function index(Request $request)
     {
-        //$websites = Website::all();
-
-        return response()->json([
-            'websites' => Website::all()
-        ]);
+        $user = $request->user();
+        if ($user->role === 'admin') {
+            return response()->json(Website::all(), 200);
+        }
+        return response()->json(['message' => 'Forbidden'], 403);
     }
-    
+
+    // Get websites created by a specific user
+    public function userWebsites(Request $request, $userId)
+    {
+        $authUser = $request->user();
+        if ($authUser->id != $userId && $authUser->role !== 'admin') {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+
+        $websites = Website::where('user_id', $userId)->get();
+        return response()->json($websites, 200);
+    }
+
+    // Both Admin and User can add websites
     public function store(Request $request)
-{
-    $input = $request->validate([
-        'url' => 'required|url',
-        'name' => 'required|string|max:255', // Add a validation for 'name'
-    ]);
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'url' => 'required|url',
+            'user_id' => 'required|exists:users,id'
+        ]);
 
-    $user = $request->user();
+        // Optional: Ensure user can only add under their user_id unless admin
+        if ($request->user()->role !== 'admin' && $request->user()->id != $validated['user_id']) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
 
-    if (!$user) {
-        return response()->json(['message' => 'Unauthenticated'], 401);
+        $website = Website::create([
+            'name' => $validated['name'],
+            'url' => $validated['url'],
+            'user_id' => $validated['user_id'],
+            'status' => 'up',  // Default status
+        ]);
+
+        return response()->json($website, 201);
     }
 
-    $input['user_id'] = $user->id;
-    $input['status'] = 'unknown'; // Default value for status
-    $input['last_checked_at'] = null; // Default value for last_checked_at
+     // Both Admin and User can delete websites
+    public function destroy($id)
+    {
+        $website = Website::findOrFail($id);
 
-    $website = Website::create($input);
+        // Optional: Check ownership if required
+        if (auth()->user()->role !== 'admin' && auth()->user()->id !== $website->user_id) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
 
-    return response()->json([
-        'message' => 'Website created successfully',
-        'website' => $website,
-    ], 201);
+        $website->delete();
+        return response()->json(['message' => 'Website deleted successfully']);
+    }
+
+    // Down website list
+    public function downWebsites(Request $request)
+{
+    //Everyone sees all down websites
+    $websites = Website::where('status', 'down')->get();
+
+    return response()->json($websites);
 }
 
 

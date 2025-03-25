@@ -2,7 +2,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -20,6 +20,10 @@ const Navbar = () => {
             <>
               <Link to="/" className="text-white">Home</Link>
               <Link to="/websites" className="text-white">Websites</Link>
+              
+              {isAdmin && (
+              <Link to="/admin" className="text-white">Manage Users</Link>
+              )}
               <Link to="/settings" className="text-white">Settings</Link>
               <button onClick={handleLogout} className="text-white">Logout</button>
             </>

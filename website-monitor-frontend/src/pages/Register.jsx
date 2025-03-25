@@ -46,7 +46,7 @@ const Register = () => {
         login(response.data.user, response.data.token);
       }
 
-      alert('Registration successful!');
+      //alert('Registration successful!');
       navigate('/login');
 
     } catch (err) {

@@ -16,6 +16,9 @@ const WebsiteList = () => {
       const endpoint = isAdmin ? '/api/websites' : `/api/user/${user.id}/websites`;
       const response = await instance.get(endpoint);
       const websiteData = Array.isArray(response.data) ? response.data : response.data.websites;
+
+      console.log("Fetched Websites:", websiteData);
+      
       setWebsites(websiteData || []);
     } catch (err) {
       console.error("Error fetching websites:", err);
@@ -34,6 +37,15 @@ const WebsiteList = () => {
       console.error("Failed to delete website:", err);
     }
   };
+
+  // Format the checked time
+  const formatCheckedTime = (timestamp) => {
+    if (!timestamp) return 'N/A';
+    const date = new Date(timestamp);
+    return date.toLocaleString(); // Example: 3/26/2025, 10:30:15 AM
+  };
+
+  
   
 
   return (
@@ -58,6 +70,9 @@ const WebsiteList = () => {
                   <p>Status:
                     <span className={website.status === "up" ? "text-green-600" : "text-red-600"}> {website.status}</span>
                   </p>
+
+                  <p>Last Checked: <span className="text-gray-700">{formatCheckedTime(website.checked_at)}</span></p>
+                  
                   <button
                     onClick={() => handleDelete(website.id)}
                     className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"

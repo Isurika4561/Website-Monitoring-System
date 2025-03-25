@@ -68,4 +68,14 @@ class WebsiteController extends Controller
         return response()->json(['message' => 'Website deleted successfully']);
     }
 
+    // Down website list
+    public function downWebsites(Request $request)
+{
+    //Everyone sees all down websites
+    $websites = Website::where('status', 'down')->get();
+
+    return response()->json($websites);
+}
+
+
 }

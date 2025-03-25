@@ -20,6 +20,7 @@ const Navbar = () => {
             <>
               <Link to="/" className="text-white">Home</Link>
               <Link to="/websites" className="text-white">Websites</Link>
+              
               {isAdmin && (
               <Link to="/admin" className="text-white">Manage Users</Link>
               )}

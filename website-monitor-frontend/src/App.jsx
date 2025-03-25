@@ -14,6 +14,7 @@ import AddWebsite from './pages/AddWebsite';
 import WebsiteList from './pages/WebsiteList';
 import Settings from './pages/Settings';
 import AdminPanel from './pages/AdminPanel';
+//import MonitoringLogs from './pages/MonitoringLogs';
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
             <Route path="/websites" element={<WebsiteList />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/admin" element={<AdminPanel />} />
+            
           </Route>
         </Routes>
       </AuthProvider>

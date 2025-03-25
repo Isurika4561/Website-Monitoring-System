@@ -34,9 +34,10 @@ const WebsiteList = () => {
       console.error("Failed to delete website:", err);
     }
   };
+  
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-gray-100">
+    <div className="h-screen w-screen flex flex-col bg-white">
       <header className="bg-white shadow-md p-6 text-center">
         <h2 className="text-3xl font-bold text-blue-700">Monitored Websites</h2>
       </header>
